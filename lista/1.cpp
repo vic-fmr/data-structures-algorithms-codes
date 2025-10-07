@@ -18,9 +18,16 @@ No* inserirNoInicio(No* raiz, int valor){
     return novoNo;
 }
 
-void inserirNoFinal(No* raiz, int valor){
-     cout << "Inserindo no final: " << valor << endl;
+void inserirNoFinal(No* &raiz, int valor){
+    cout << "Inserindo no final: " << valor << endl;
     No* temp = raiz;
+
+    if(temp == nullptr){
+        raiz = new No;
+        raiz->valor = valor;
+        raiz->prox = nullptr;
+        return;
+    }
 
     while (temp->prox != nullptr)
     {
@@ -88,13 +95,14 @@ void exibirLista(No* raiz){
 int main(){
     No* raiz = nullptr;
 
+    inserirNoFinal(raiz, 12);
+    inserirNoFinal(raiz, 11);
+    inserirNoFinal(raiz, 1100);
+
     raiz = inserirNoInicio(raiz, 10);
     raiz = inserirNoInicio(raiz, 20);
     raiz = inserirNoInicio(raiz, 50);
 
-    inserirNoFinal(raiz, 12);
-    inserirNoFinal(raiz, 11);
-    inserirNoFinal(raiz, 1100);
 
     exibirLista(raiz);
 
