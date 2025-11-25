@@ -1,72 +1,76 @@
 #include <iostream>
+#include <vector>
+#include <stdexcept>
+
 using namespace std;
 
-struct No {
-	int valor;
-	No* prox;
+class Fila {
+private:
+    vector<int> dados;
+
+public:
+    void enqueue(int valor) {
+        dados.push_back(valor);
+    }
+
+    int dequeue() {
+        if (isEmpty()) {
+            throw runtime_error("Erro: A fila esta vazia. Nao e possivel remover.");
+        }
+        
+        int elemento = dados.front(); 
+        
+        dados.erase(dados.begin());
+        
+        return elemento;
+    }
+
+    int front() const {
+        if (isEmpty()) {
+            throw runtime_error("Erro: A fila esta vazia. Nao ha elemento na frente.");
+        }
+        return dados.front();
+    }
+
+    bool isEmpty() const {
+        return dados.empty();
+    }
 };
-
-struct Fila {
-	No* inicio;
-	No* fim;
-	Fila() : inicio(nullptr), fim(nullptr) {}
-};
-
-void enqueue(Fila &f, int valor) {
-
-    //Criação padrão de um novo nó
-	No* novoNo = new No;
-	novoNo->valor = valor;
-	novoNo->prox = nullptr;
-
-    //Inserção no final da fila
-	if (f.fim == nullptr) {
-        //Fila vazia
-		f.inicio = f.fim = novoNo;
-	} else {
-        //Fila não vazia
-		f.fim->prox = novoNo; // Aponta o próximo do fim atual para o novo nó
-		f.fim = novoNo; // Atualiza o fim da fila para o novo nó
-	}
-}
-
-int dequeue(Fila &f) {
-    //Verifica se a fila está vazia
-	if (f.inicio == nullptr) {
-		cout << "Fila vazia!" << endl;
-		return -1;
-	}
-
-    //Temp para pegar o valor do início
-	No* temp = f.inicio;
-	int valor = temp->valor;// Guarda o valor a ser retornado
-	f.inicio = temp->prox;// Atualiza o início da fila
-
-    // Se a fila ficar vazia após o dequeue
-	if (f.inicio == nullptr) {
-		f.fim = nullptr;
-	}
-	delete temp;
-	return valor;
-}
-
-void exibir(Fila &f) {
-	No* temp = f.inicio;
-	cout << "Fila: ";
-	while (temp != nullptr) {
-		cout << temp->valor << " ";
-		temp = temp->prox;
-	}
-	cout << endl;
-}
 
 int main() {
-	Fila f;
-	enqueue(f, 10);
-	enqueue(f, 20);
-	enqueue(f, 30);
-	exibir(f);
-	cout << "Dequeue: " << dequeue(f) << endl;
-	exibir(f);
-	return 0;
+    Fila fila;
+
+    cout << "A fila esta vazia? " << (fila.isEmpty() ? "Sim" : "Nao") << endl;
+
+    cout << "--- Enqueue (Inserindo) ---" << endl;
+    fila.enqueue(10);
+    cout << "Inserido: 10" << endl;
+    fila.enqueue(20);
+    cout << "Inserido: 20" << endl;
+    fila.enqueue(30);
+    cout << "Inserido: 30" << endl;
+    
+    cout << "Primeiro elemento (Front): " << fila.front() << endl;
+    
+    cout << "\n--- Dequeue (Removendo) ---" << endl;
+    try {
+        cout << "Removido: " << fila.dequeue() << endl;
+        cout << "Removido: " << fila.dequeue() << endl;
+        
+        cout << "Primeiro elemento (Front) apos remocao: " << fila.front() << endl;
+        
+        cout << "A fila esta vazia? " << (fila.isEmpty() ? "Sim" : "Nao") << endl;
+        
+        cout << "Removido: " << fila.dequeue() << endl;
+        
+        cout << "A fila esta vazia? " << (fila.isEmpty() ? "Sim" : "Nao") << endl;
+
+        cout << "Tentando remover de uma fila vazia..." << endl;
+        fila.dequeue(); 
+
+    } catch (const runtime_error& e) {
+        cerr << e.what() << endl;
+    }
+
+    return 0;
 }
